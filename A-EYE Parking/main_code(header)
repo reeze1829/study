@@ -1,0 +1,19 @@
+---Team_Project.ipynb 파일---
+#헤더 설정 블록
+import cv2
+import sys
+import numpy as np
+import pickle
+import pytesseract
+from sympy.physics.units import current
+from ultralytics import YOLO
+import sqlite3
+import math #최적의 거리 계산할때 사용
+# from PyQt5.QtWidgets import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtCore import *
+# from PyQt5 import uic #.ui파일을 불러오는데 사용
+import os
+import re
+
+model_b = YOLO('yolov8n.pt')

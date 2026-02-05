@@ -1,0 +1,62 @@
+---Team_Project_DB.ipynb 파일---
+import sqlite3
+import os
+
+# 1. 데이터베이스 연결 (robotics(유저명))
+db_path = r'C:\Users\robotics\databases\parking.db'
+
+os.makedirs(os.path.dirname(db_path), exist_ok=True)
+conn = sqlite3.connect(db_path)
+cur = conn.cursor()
+
+# 2. 테이블 존재 여부 확인(미존재시 생성)
+cur.execute("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='car_info'")
+
+if cur.fetchone()[0] == 1:
+    # 테이블이 이미 있으면 pass
+    pass
+else:
+    # 테이블이 없을 때 생성
+    cur.execute('''
+        CREATE TABLE car_info (
+            no INTEGER,
+            vehicle_no TEXT,
+            name TEXT,
+            building_no INTEGER,
+            PRIMARY KEY (no, vehicle_no)
+        )
+    ''')
+
+# 3. 기존 데이터 모두 삭제
+cur.execute("DELETE FROM car_info")
+
+# 4. 데이터 고정값 10개 입력
+data_to_insert = [
+    (10001, '11나7901', '둘리', 101),
+    (10002, '254고3824', '철수', 102),
+    (10003, '23수8019', '영희', 102),
+    (10004, '33도5512', '희동이', 101),
+    (10005, '131러3170', '고길동', 102),
+    (10006, '374호1182', '또치', 101),
+    (10007, '15저6308', '도우너', 101),
+    (10008, '55차8819', '박정자', 102),
+    (10009, '09우4591', '마이콜', 101),
+    (10010, '67서5823', '공실이', 101)
+]
+
+# 5. 데이터 삽입
+cur.executemany('''
+    INSERT INTO car_info (no, vehicle_no, name, building_no)
+    VALUES (?, ?, ?, ?)
+''', data_to_insert)
+
+conn.commit()
+
+# 데이터 확인 출력
+print("\n--- 현재 테이블 데이터 ---")
+cur.execute("SELECT * FROM car_info")
+rows = cur.fetchall()
+for row in rows:
+    print(row)
+
+conn.close()
